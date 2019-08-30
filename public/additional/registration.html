@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../styles/main.css">
+    <script src="../scripts/modal.js"></script>
+    <script src="https://kit.fontawesome.com/b146557da1.js"></script>
+    <link href="../../favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon">
+    <title>New user</title>
+</head>
+
+<body>
+    <div id="header">
+        <p>Create new user</p>
+        <button type="button" class="btn btn-success" id="seeUsersBtn">Look existing users</button>
+    </div>
+    <div class="page-container" id="userForm">
+        <form>
+            <div class="form-group">
+                <input type="text" class="form-control" id="username1" placeholder="Username">
+            </div>
+            <div class="form-group">
+                <button id="registrateBtn" class="form-control" type="button"
+                    style="position:relative; display:inline; width:30%;">Create</button>
+                <button id="backBtn" class="form-control" type="button"
+                    style="position:relative; display:inline;  left:38%; width:30%">Back</button>
+            </div>
+
+        </form>
+    </div>
+    <footer class="footer">
+        <p>Listening from Laktionova</p>
+    </footer>
+
+    <script>
+        let backBtn = document.getElementById("backBtn")
+        backBtn.onmousedown = () => window.location.href = "../index.html"
+        let newUser = document.getElementById("username1")
+        let createBtn = document.getElementById("registrateBtn")
+
+        createBtn.onmousedown = async () => {
+            let res = await fetch('http://localhost:3000/users', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+
+            let users = await res.json()
+
+            let nameUsers = users.map((user) => user.name)
+
+            function checkUsers(username) {
+                return username == newUser.value
+            }
+
+            if (nameUsers.some(checkUsers)) {
+                let modalWrongExist = new Modal("#BF3F3F", "User with such name already exist!")
+                let modalWrong = document.getElementById("modal")
+                let modalBack = document.getElementById("modalBack")
+                let btnTimes = document.getElementById("btnTimes")
+                btnTimes.onmousedown = () => {
+                    modalWrong.parentNode.removeChild(modalWrong)
+                    modalBack.parentNode.removeChild(modalBack)
+                }
+            }
+            else {
+                async function addUser() {
+                    let name = newUser.value
+                    let obj = { name }
+
+                    let json = JSON.stringify(obj)
+                    let res = await fetch('http://localhost:3000/users', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: json
+                    })
+                }
+                addUser()
+                window.location.href = "../index.html"
+            }
+        }
+
+        let seeUsers = document.getElementById("seeUsersBtn")
+        let divUser = document.getElementById("userForm")
+        let formUser = document.getElementsByTagName("form")[0]
+
+        seeUsers.onmousedown = () => {
+            formUser.remove()
+            async function seeUsers() {
+                let res = await fetch("http://localhost:3000/users", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                })
+
+                let users = await res.json()
+                console.log(users)
+
+                let i = 0
+                let tableUsers = document.createElement("table")
+                tableUsers.style = "text-align: center; align: center; border: solid 2px; bordercolor:white;"
+                tableUsers.className = "form-group"
+                divUser.appendChild(tableUsers)
+
+                users.forEach(user => {
+                    let trUser = document.createElement("tr")
+                    tableUsers.appendChild(trUser)
+                    let tdN = document.createElement("td")
+                    tdN.innerText = ++i
+                    trUser.appendChild(tdN)
+                    let tdName = document.createElement("td")
+                    tdName.innerText = user.name
+                    trUser.appendChild(tdName)
+                    let tdDel = document.createElement("td")
+                    trUser.appendChild(tdDel)
+                    let fontDel = document.createElement("i")
+                    fontDel.className = "far fa-trash-alt"
+                    tdDel.appendChild(fontDel)
+                    tdDel.onmousedown = async () => {
+                        let res = await fetch(`http://localhost:3000/users/${user.id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        })
+                        trUser.parentNode.removeChild(trUser)
+                    }
+                })
+            }
+            seeUsers().then(element => {
+            let backBtn = document.createElement("button")
+            backBtn.innerText = "Back"
+            backBtn.className = "form-control"
+            backBtn.style = "position:relative; display:block;  left:30%; width: 30%; margin:30px;"
+            userForm.appendChild(backBtn)
+            backBtn.onmousedown = () => window.location.href = "registration.html"
+        })
+
+        }
+    </script>
+</body>
+
+</html>

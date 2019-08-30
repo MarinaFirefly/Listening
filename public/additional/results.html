@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../styles/main.css">
+    <script src="https://kit.fontawesome.com/b146557da1.js"></script>
+    <link href="../../favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon">
+    <title>Results</title>
+</head>
+
+<body>
+    <div id="header">
+        <p>Results</p>
+    </div>
+    <div id="userForm">
+        <table id="table-result" class="form-group" align="center" border="2px" bordercolor="white"
+            style="text-align: center;">
+        </table>
+    </div>
+    <footer class="footer">
+        <p>Listening from Laktionova</p>
+    </footer>
+
+    <script>
+        let mainDiv = document.getElementById("userForm")
+
+        async function seeResults() {
+            let res = await fetch("http://localhost:3000/results?_sort=result&_order=desc&_end=10", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            })
+
+            let results = await res.json()
+            console.log(results)
+
+            let i = 0
+
+            results.forEach(result => {
+                let tableResult = document.getElementById("table-result")
+                let trResult = document.createElement("tr")
+                tableResult.appendChild(trResult)
+                let tdN = document.createElement("td")
+                tdN.innerText = ++i
+                trResult.appendChild(tdN)
+                let tdName = document.createElement("td")
+                tdName.innerText = result.name
+                trResult.appendChild(tdName)
+                let tdLanguage = document.createElement("td")
+                tdLanguage.innerText = result.lang
+                trResult.appendChild(tdLanguage)
+                let tdResult = document.createElement("td")
+                tdResult.innerText = result.result
+                trResult.appendChild(tdResult)
+                let tdDel = document.createElement("td")
+                trResult.appendChild(tdDel)
+                let fontDel = document.createElement("i")
+                fontDel.className = "far fa-trash-alt"
+                tdDel.appendChild(fontDel)
+                tdDel.onmousedown = async () => {
+                    let res = await fetch(`http://localhost:3000/results/${result.id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                    trResult.parentNode.removeChild(trResult)
+                }
+            })
+        }
+        seeResults().then(element => {
+            let backBtn = document.createElement("button")
+            backBtn.innerText = "Back"
+            backBtn.className = "form-control"
+            backBtn.style = "position:relative; display:block;  left:30%; width: 30%; margin:30px;"
+            mainDiv.appendChild(backBtn)
+            backBtn.onmousedown = () => window.location.href = "../index.html"
+        })
+
+    </script>
+</body>
+
+</html>

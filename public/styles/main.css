@@ -1,0 +1,78 @@
+body{
+    background-color: #D0FAD0;
+}
+#header {
+    color: white;
+    background-image: url(https://picsum.photos/id/785/1400/200);
+    height: 10%;
+    text-align: center;
+    padding: 14px;
+    font: 40px bold;
+    width: 100%;
+}
+
+#userForm{
+    width: 500px;
+    position: absolute;
+    left:50%;
+    top: 50%;                
+    transform: translate(-50%, -50%);
+    background-color: gray;
+    border: solid 2px white;
+    border-radius: 5%;
+    color:white;
+}
+
+#modal{
+    width: 400px;
+    height: 160px;
+    position: absolute;
+    left:50%;
+    top: 50%;                
+    transform: translate(-50%, -50%);
+    background-color:#f0f0f0;
+    border: solid 2px #999999;
+    color:black;
+    z-index: 101;
+}
+#btnOk{
+    width: 70px;
+    height: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    position: absolute;
+    left:50%;
+    top: 80%;                
+    transform: translate(-50%, -50%);
+    background-color: gray;
+    border: solid 2px white;
+    border-radius: 5%;
+    color:white;
+}
+#modalTxt{
+    text-align: center; 
+    font-size: 18px;
+    position: fixed;
+    width: 390px;
+    height: 120px;
+    overflow: auto; 
+    padding: 10% 0 0 0;         
+ 
+}
+
+.form-group{
+    width: 86%;
+    position: relative;
+    margin: 8%
+
+}
+
+.footer{
+    color: white;
+    text-align: center;
+    background-color: grey;
+    position: fixed;
+    width: 100%;
+    top: 95%;
+    bottom: 0%
+ }

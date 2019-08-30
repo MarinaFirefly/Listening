@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../styles/main.css">
+    <script src="../scripts/modal.js"></script>
+    <script src="https://kit.fontawesome.com/b146557da1.js"></script>
+    <link href="../../favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon">
+    <title>Add words</title>
+</head>
+
+<body>
+    <div id="header">
+        <p>Adding words</p>
+    </div>
+    <div class="page-container" id="userForm">
+        <form>
+            <div class="form-group">
+                <label id="newwordL">New word</label>
+                <input type="text" class="form-control" id="newword" placeholder="New word">
+            </div>
+            <div class="form-group">
+                <label id="language1L">Choose language</label>
+                <select class="form-control" id="language1">
+                    <option>русский</option>
+                    <option>english</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button id="addBtn" class="form-control" type="button"
+                    style="position:relative; display:inline; left:0%; width:30%;">Add</button>
+                <button id="backBtn" class="form-control" type="button"
+                    style="position:relative; display:inline;  left:38%; width:30%">Back</button>
+            </div>
+        </form>
+    </div>
+    <footer class="footer">
+        <p>Listening from Laktionova</p>
+    </footer>
+
+    <script>
+        let backBtn = document.getElementById("backBtn")
+        backBtn.onmousedown = () => window.location.href = "../index.html"
+
+        let newWord = document.getElementById("newword")
+        let language = document.getElementById("language1")
+
+        console.log(newWord)
+        console.log(language.value)
+
+        function wordExist() {
+            let modalWrongExist = new Modal("#BF3F3F", "Such word exist!")
+            let modalWrong = document.getElementById("modal")
+            let modalBack = document.getElementById("modalBack")
+            let btnTimes = document.getElementById("btnTimes")
+            btnTimes.onmousedown = () => {
+                modalWrong.parentNode.removeChild(modalWrong)
+                modalBack.parentNode.removeChild(modalBack)
+            }
+        }
+
+        function wrongChar() {
+            let modalWrongExist = new Modal("#BF3F3F", "Unacceptable characters were entered!")
+            let modalWrong = document.getElementById("modal")
+            let modalBack = document.getElementById("modalBack")
+            let btnTimes = document.getElementById("btnTimes")
+            btnTimes.onmousedown = () => {
+                modalWrong.parentNode.removeChild(modalWrong)
+                modalBack.parentNode.removeChild(modalBack)
+            }
+        }
+
+        function noValue() {
+            let modalWrongExist = new Modal("#BF3F3F", "Enter some word!")
+            let modalWrong = document.getElementById("modal")
+            let modalBack = document.getElementById("modalBack")
+            let btnTimes = document.getElementById("btnTimes")
+            btnTimes.onmousedown = () => {
+                modalWrong.parentNode.removeChild(modalWrong)
+                modalBack.parentNode.removeChild(modalBack)
+            }
+        }
+
+        let addBtn = document.getElementById("addBtn")
+        addBtn.onmousedown = forAdding
+
+        function forAdding() {
+            if (language.value === "english") {
+                if (newWord.value == ""){
+                    noValue()
+                }
+                else if (newWord.value.split("").every(letter => (letter.charCodeAt() > 64 && letter.charCodeAt() < 91)
+                    || (letter.charCodeAt() > 96 && letter.charCodeAt() < 123) || letter.charCodeAt() === 45)) {
+                    async function getEnglisshWords() {
+                        let res = await fetch('http://localhost:3000/englishWords', {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        })
+
+                        let englishWords = await res.json()
+                        let englishWordsValues = englishWords.map((englishWord => englishWord.word))
+                        function checkEnglishWords(englishWord) {
+                            return englishWord == newWord.value
+                        }
+
+                        if (englishWordsValues.some(checkEnglishWords)) {
+                            wordExist()
+                        }
+                        else {
+                            async function addWord() {
+                                let word = newWord.value
+                                let obj = { word }
+
+                                let json = JSON.stringify(obj)
+                                let res = await fetch('http://localhost:3000/englishWords', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: json
+                                })
+                            }
+                            addWord()
+                            newWord.value = ""
+                        }
+                    }
+                    getEnglisshWords()
+                }
+                else {
+                    wrongChar()
+                }
+            }
+            if (language.value === "русский") {
+                if (newWord.value == ""){
+                    noValue()
+                }
+                else if (newWord.value.split("").every(letter => (letter.charCodeAt() > 1039 && letter.charCodeAt() < 1104)
+                    || letter.charCodeAt() == 45 || letter.charCodeAt() == 1025 || letter.charCodeAt() == 1105)) {
+                    async function getRussianWords() {
+                        let res = await fetch('http://localhost:3000/russianWords', {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        })
+
+                        let russianWords = await res.json()
+                        let russianWordsValues = russianWords.map((russianWord => russianWord.word))
+                        function checkRussianWords(russianWord) {
+                            return russianWord == newWord.value
+                        }
+
+                        if (russianWordsValues.some(checkRussianWords)) {
+                            wordExist()
+                        }
+                        else {
+                            async function addWord() {
+                                let word = newWord.value
+                                let obj = { word }
+
+                                let json = JSON.stringify(obj)
+                                let res = await fetch('http://localhost:3000/russianWords', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: json
+                                })
+                            }
+                            addWord()
+                            newWord.value = ""
+                        }
+                    }
+                    getRussianWords()
+                }
+                else {
+                    wrongChar()
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="styles/main.css">
+    <script src="scripts/create-answer-field.js"></script>
+    <script src="scripts/modal.js"></script>
+    <script src="https://kit.fontawesome.com/b146557da1.js"></script>
+    <link href="../favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+
+
+    <title>Linguo</title>
+</head>
+
+
+<body>
+    <div id="header">
+        <p>You can add words to vocabulary here...</p>
+        <button type="button" class="btn btn-success" id="addwordsBtn">Add words</button>
+    </div>
+
+    <div class="page-container" id="userForm">
+        <div class="form-group">
+            <label id="usernameL">Choose user</label>
+            <select class="form-control" id="chooseUser">
+            </select>
+        </div>
+        <div class="form-group">
+            <label id="languageL">Choose language</label>
+            <select class="form-control" id="language">
+                <option>русский</option>
+                <option>english</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button id="startBtn" class="form-control" type="button"
+                style="position:relative; display:inline; left:0%; width:30%;">Start</button>
+            <button id="registrationBtn" class="form-control" type="button"
+                style="position:relative; display:inline;  left:38%; width:30%">New user</button>
+        </div>
+    </div>
+    <footer class="footer">
+        <p>Listening from Laktionova</p>
+    </footer>
+    <script>
+        let addWords = document.getElementById("addwordsBtn")
+        addWords.onclick = () => window.location.href = "additional/addwords.html"
+
+        let registration = document.getElementById("registrationBtn")
+        registration.onclick = () => window.location.href = "additional/registration.html"
+
+        let language = document.getElementById("language")
+        let userForm = document.getElementById("userForm")
+        let chooseUser = document.getElementById("chooseUser")
+        let startGame = document.getElementById("startBtn")
+
+        startGame.onclick = () => {
+            if (chooseUser.value != "") {
+                userForm.parentNode.removeChild(userForm)
+                createAnswerField()
+            }
+        }
+
+        chooseUser.onmouseenter = () => {
+            if (chooseUser.innerHTML.indexOf("option") === -1) {
+                async function addChooseMenu() {
+                    let res = await fetch('http://localhost:3000/users', {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                    let users = await res.json()
+
+                    users.forEach(user => {
+                        let option = document.createElement("option")
+                        option.innerText = user.name
+
+                        chooseUser.appendChild(option)
+                    })
+                }
+                addChooseMenu()
+            }
+        }
+    </script>
+
+</body>
+
+</html>
