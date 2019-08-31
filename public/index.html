@@ -65,7 +65,7 @@
             }
         }
 
-        chooseUser.onmouseenter = () => {
+        chooseUser.onmouseover = () => {
             if (chooseUser.innerHTML.indexOf("option") === -1) {
                 async function addChooseMenu() {
                     let res = await fetch('http://localhost:3000/users', {

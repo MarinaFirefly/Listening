@@ -15,6 +15,10 @@
     {
       "name": "Vasya",
       "id": 5
+    },
+    {
+      "name": "Gogle",
+      "id": 6
     }
   ],
   "russianWords": [
@@ -943,6 +947,10 @@
     {
       "word": "capital",
       "id": 125
+    },
+    {
+      "word": "google",
+      "id": 126
     }
   ],
   "results": [
@@ -983,28 +991,22 @@
       "id": 15
     },
     {
-      "name": "Matt",
-      "result": 10,
-      "lang": "english",
-      "id": 16
-    },
-    {
       "name": "Var-var",
       "result": 7,
       "lang": "русский",
       "id": 17
     },
     {
-      "name": "Marina",
-      "result": 9,
-      "lang": "русский",
-      "id": 18
+      "name": "Var-var",
+      "result": 1,
+      "lang": "english",
+      "id": 20
     },
     {
-      "name": "Vasya",
-      "result": 10,
+      "name": "Gogle",
+      "result": 7,
       "lang": "english",
-      "id": 19
+      "id": 21
     }
   ]
 }
